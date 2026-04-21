@@ -1,0 +1,494 @@
+{
+  "name": "Rag AI Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -96,
+        -448
+      ],
+      "id": "e62919aa-3cb8-4e54-a177-48cee5cc8df2",
+      "name": "Telegram Trigger",
+      "webhookId": "419e3064-17a9-4f8a-a5f4-2295ddda66cd",
+      "credentials": {
+        "telegramApi": {
+          "id": "wVAtfCl4fgk9nlbG",
+          "name": "ScarX_Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=answer the user query :  {{ $json.message.text }}",
+        "options": {
+          "systemMessage": "you are a RAG ai agent, call the retrieval tool and fetch the correct details from the vector DB.\n\nIf the answer is wrong, fallback to the LLM and answer it from general knowledge."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        112,
+        -448
+      ],
+      "id": "8575ba00-a888-4cf6-8c35-a17adfc7ea4d",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -32,
+        -240
+      ],
+      "id": "f3172635-8fe6-4afc-a0a7-e712e4c39125",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "MRXyAWl2EPVf0hdn",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "=telegram_ {{ $json.message.chat.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        112,
+        -240
+      ],
+      "id": "bfc2b4ef-f16f-4132-a11a-814f94198cc5",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        464,
+        -448
+      ],
+      "id": "2cb96d57-cc08-423c-9511-a01b217c49e8",
+      "name": "Send a text message",
+      "webhookId": "6392113c-b2ff-437d-a2d8-2659d20f337e",
+      "credentials": {
+        "telegramApi": {
+          "id": "wVAtfCl4fgk9nlbG",
+          "name": "ScarX_Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "1Yy6ivQg9Lc8goAeAoh_ogCC5FIY2Q6Qc",
+          "mode": "list",
+          "cachedResultName": "N8N_Automation_Folder",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1Yy6ivQg9Lc8goAeAoh_ogCC5FIY2Q6Qc"
+        },
+        "event": "fileCreated",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1584,
+        -464
+      ],
+      "id": "7b2e2b13-3de5-4342-864e-a113927feee3",
+      "name": "Google Drive Trigger",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "ytvGjAC1YsWUyyhO",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -1376,
+        -464
+      ],
+      "id": "7f5e5f7a-7143-45d9-89d6-39bb9ba0f4b3",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "ytvGjAC1YsWUyyhO",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "timon-ai",
+          "mode": "list",
+          "cachedResultName": "timon-ai"
+        },
+        "options": {
+          "pineconeNamespace": "=company_document_{{ $now.toFormat('yyyyLLdd-HHmm')}}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        -1136,
+        -464
+      ],
+      "id": "d221bcde-9018-4367-b340-93b0b71d3b86",
+      "name": "Pinecone Vector Store",
+      "credentials": {
+        "pineconeApi": {
+          "id": "v4zWuy41Nbb79CRP",
+          "name": "timon-ai"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "dimensions": 1536
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1376,
+        -208
+      ],
+      "id": "7fb1d0f5-235c-466b-bdd6-3c3cb6679dc9",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "MRXyAWl2EPVf0hdn",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "binary",
+        "textSplittingMode": "custom",
+        "options": {
+          "splitPages": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        -1008,
+        -256
+      ],
+      "id": "db8c2277-110f-4e5b-99e2-f53d69809564",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "chunkOverlap": 100,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        -848,
+        -32
+      ],
+      "id": "3e58d2fc-725e-4aa7-9c5a-c4a2b8877db9",
+      "name": "Recursive Character Text Splitter"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        576,
+        144
+      ],
+      "id": "6e94390f-d6cb-421b-a48b-4a57447d24a3",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "MRXyAWl2EPVf0hdn",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "timon-ai",
+          "mode": "list",
+          "cachedResultName": "timon-ai"
+        },
+        "options": {
+          "pineconeNamespace": "company_document_20260421-1757"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        160,
+        160
+      ],
+      "id": "1f38b347-c5ab-448f-8491-39b9ae3a46c8",
+      "name": "Pinecone Vector Store1",
+      "credentials": {
+        "pineconeApi": {
+          "id": "v4zWuy41Nbb79CRP",
+          "name": "timon-ai"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "dimensions": 1536
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        256,
+        368
+      ],
+      "id": "409fb595-dd81-45b9-a3bb-969847355733",
+      "name": "Embeddings OpenAI1",
+      "credentials": {
+        "openAiApi": {
+          "id": "MRXyAWl2EPVf0hdn",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "=retrieve the context based on user context:  {{ $json.message.text }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolVectorStore",
+      "typeVersion": 1.1,
+      "position": [
+        320,
+        -64
+      ],
+      "id": "9d5aee87-f952-4a43-9958-9841b5e0b85c",
+      "name": "Answer questions with a vector store (Basic rag)"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive Trigger": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Answer questions with a vector store (Basic rag)",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pinecone Vector Store1": {
+      "ai_vectorStore": [
+        [
+          {
+            "node": "Answer questions with a vector store (Basic rag)",
+            "type": "ai_vectorStore",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store1",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Answer questions with a vector store (Basic rag)": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "14f7e730-ed25-4e68-b478-be33a6e68a13",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b568a44e2b699957545d0a074fcdf3f5998110a8ee51bfe6ef74e0d5404c6852"
+  },
+  "id": "I21CkiNIuhatzeHu",
+  "tags": []
+}
