@@ -1,0 +1,109 @@
+# Restaurant FAQ
+
+## General Information
+
+### 1. What are your opening hours?
+
+Our restaurant is open from 11:00 AM to 11:00 PM every day.
+
+### 2. Where is the restaurant located?
+
+We are located at [Restaurant Address].
+
+### 3. Do you have parking available?
+
+Yes, we provide parking facilities for our customers.
+
+### 4. Do you offer dine-in, takeaway, and delivery?
+
+Yes, we offer dine-in, takeaway, and home delivery services.
+
+### 5. How can I make a reservation?
+
+You can make a reservation by calling us, visiting our website, or using our mobile app.
+
+## Menu & Food
+
+### 6. Do you have vegetarian options?
+
+Yes, we offer a variety of vegetarian dishes.
+
+### 7. Do you have vegan options?
+
+Yes, we have vegan-friendly menu items available.
+
+### 8. Do you offer gluten-free dishes?
+
+Yes, we have selected gluten-free dishes on our menu.
+
+### 9. Can I customize my order?
+
+Yes, we can customize dishes based on your preferences whenever possible.
+
+### 10. Do you provide kids' meals?
+
+Yes, we have a dedicated kids' menu.
+
+### 11. Do you serve spicy food?
+
+We offer both mild and spicy dishes. You can request your preferred spice level.
+
+### 12. Do you use fresh ingredients?
+
+Yes, we prepare our dishes using fresh and high-quality ingredients.
+
+## Orders & Payments
+
+### 13. What payment methods do you accept?
+
+We accept cash, credit cards, debit cards, UPI, and digital wallets.
+
+### 14. Can I order online?
+
+Yes, online ordering is available through our website and food delivery platforms.
+
+### 15. Is there a minimum order value for delivery?
+
+The minimum order value depends on your location and delivery platform.
+
+### 16. How long does delivery take?
+
+Delivery usually takes between 30 to 60 minutes depending on distance and order volume.
+
+### 17. Do you offer catering services?
+
+Yes, we provide catering services for parties, corporate events, and special occasions.
+
+## Customer Policies
+
+### 18. What is your cancellation policy?
+
+Orders can be cancelled within a limited time after placing them.
+
+### 19. Do you host private events or parties?
+
+Yes, we can host birthdays, family gatherings, and corporate events.
+
+### 20. Are pets allowed?
+
+Pets may be allowed in outdoor seating areas, depending on restaurant policy.
+
+### 21. Do you have Wi-Fi available?
+
+Yes, free Wi-Fi is available for customers.
+
+### 22. Do you have outdoor seating?
+
+Yes, we offer outdoor seating options.
+
+### 23. Is the restaurant wheelchair accessible?
+
+Yes, our restaurant is wheelchair accessible.
+
+### 24. Do you offer discounts or loyalty programs?
+
+Yes, we provide seasonal offers, discounts, and loyalty rewards for regular customers.
+
+### 25. How can I contact customer support?
+
+You can contact us via phone, email, or through our website contact form.
